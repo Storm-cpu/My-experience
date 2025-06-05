@@ -1,0 +1,32 @@
+# Dependencies
+node_modules/
+
+# NestJS build output
+dist/
+
+# Environment variables files
+.env
+.env.*.local
+# !.env.example (Nếu bạn có file này và muốn commit nó)
+
+# Logs
+logs/
+*.log
+npm-debug.log*
+yarn-debug.log*
+pnpm-debug.log*
+
+# TypeScript cache
+*.tsbuildinfo
+
+# OS generated files
+.DS_Store
+Thumbs.db
+
+# IDE specific folders (nếu bạn muốn ignore chúng ở cấp độ này)
+# .idea/
+# .vscode/
+
+# Test runner cache/output
+coverage/
+.nyc_output/

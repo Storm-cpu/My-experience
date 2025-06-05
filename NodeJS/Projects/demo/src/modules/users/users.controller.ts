@@ -1,0 +1,49 @@
+import {
+    Controller,
+    Get,
+    Post,
+    Body,
+    Param,
+    Delete,
+    Put,
+    ParseIntPipe, // Để chuyển đổi param id sang number
+} from '@nestjs/common';
+import { UsersService } from './users.service';
+import { CreateUserDto } from './dto/create-user.dto';
+import { UpdateUserDto } from './dto/update-user.dto';
+
+@Controller('users') //  Định nghĩa base path là /users
+export class UsersController {
+    constructor(private readonly usersService: UsersService) { }
+
+    @Get()
+    findAll() {
+        return this.usersService.findAll();
+    }
+
+    @Get(':id')
+    findOne(@Param('id', ParseIntPipe) id: number) {
+        // Sử dụng ParseIntPipe để đảm bảo id là số và tự động chuyển đổi
+        return this.usersService.findOne(id);
+    }
+
+    @Post()
+    create(@Body() createUserDto: CreateUserDto) {
+        // NestJS sẽ tự động validate body nếu bạn đã cài đặt ValidationPipe globaly
+        // hoặc bạn có thể thêm @UsePipes(new ValidationPipe()) ở đây
+        return this.usersService.create(createUserDto);
+    }
+
+    @Put(':id')
+    update(
+        @Param('id', ParseIntPipe) id: number,
+        @Body() updateUserDto: UpdateUserDto,
+    ) {
+        return this.usersService.update(id, updateUserDto);
+    }
+
+    @Delete(':id')
+    remove(@Param('id', ParseIntPipe) id: number) {
+        return this.usersService.remove(id);
+    }
+}
