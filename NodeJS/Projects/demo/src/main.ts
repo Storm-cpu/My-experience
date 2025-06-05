@@ -1,23 +1,39 @@
 import { NestFactory } from '@nestjs/core';
 import { AppModule } from './app.module';
-import { ValidationPipe } from '@nestjs/common'; // Thêm dòng này
+import { ValidationPipe } from '@nestjs/common';
+import { SwaggerModule, DocumentBuilder } from '@nestjs/swagger';
 
 async function bootstrap() {
   const app = await NestFactory.create(AppModule);
 
-  // Sử dụng ValidationPipe toàn cục
+  app.setGlobalPrefix('api');
+
   app.useGlobalPipes(
     new ValidationPipe({
-      whitelist: true, // Loại bỏ các thuộc tính không có trong DTO
-      forbidNonWhitelisted: true, // Báo lỗi nếu có thuộc tính không mong muốn
-      transform: true, // Tự động chuyển đổi kiểu dữ liệu (ví dụ: string sang number cho params)
+      whitelist: true,
+      forbidNonWhitelisted: true,
+      transform: true,
       transformOptions: {
-        enableImplicitConversion: true, // Cho phép chuyển đổi ngầm định
+        enableImplicitConversion: true,
       },
     }),
   );
 
-  await app.listen(3000);
-  console.log(`Application is running on: ${await app.getUrl()}`);
+  const config = new DocumentBuilder()
+    .setTitle('Test API')
+    .setDescription('Test API Description')
+    .setVersion('1.0')
+    // .addBearerAuth()
+    .build();
+  const document = SwaggerModule.createDocument(app, config);
+
+  SwaggerModule.setup('swaggerui', app, document);
+
+  const port = process.env.PORT || 3000;
+  await app.listen(port);
+
+  console.log(`Application is running on: http://localhost:${port}`);
+  console.log(`API global prefix set to: /api`);
+  console.log(`Swagger UI available at: http://localhost:${port}/swaggerui`);
 }
 bootstrap();
