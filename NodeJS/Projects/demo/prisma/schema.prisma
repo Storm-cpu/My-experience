@@ -1,0 +1,23 @@
+// prisma/schema.prisma
+
+// Khai báo generator để tạo ra Prisma Client
+generator client {
+  provider = "prisma-client-js"
+}
+
+// Khai báo nguồn dữ liệu
+datasource db {
+  provider = "postgresql" // Loại database là PostgreSQL
+  url      = env("DATABASE_URL") // Lấy chuỗi kết nối từ file .env
+}
+
+// Định nghĩa model User, sẽ được ánh xạ thành bảng "users"
+model User {
+  id    Int     @id @default(autoincrement()) // id là khóa chính, tự động tăng
+  email String  @unique // email là duy nhất
+  name  String? // Dấu ? cho biết trường này có thể là null
+  age   Int
+
+  // Ánh xạ model User này tới bảng có tên là "users" trong database
+  @@map("users")
+}
